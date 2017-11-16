@@ -5,53 +5,68 @@
  */
 
 import React, { Component } from 'react';
+import Camera from 'react-native-camera';
 import {
-  Platform,
-  StyleSheet,
-  Text,
-  View
+    StyleSheet,
+    Text,
+    View,
+    TextInput,
+    TouchableHighlight
 } from 'react-native';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
-
 export default class App extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
-      </View>
-    );
-  }
+    constructor(props) {
+        super(props);
+
+        this.state = {
+        }
+    }
+
+    render() {
+        return (
+            <Camera
+                ref="cam"
+                style={styles.container}
+                >
+                <View style={styles.buttonBar}>
+                    <TouchableHighlight style={styles.button} onPress={this._takePicture}>
+                        <Text style={styles.buttonText}>Take</Text>
+                    </TouchableHighlight>
+                </View>
+            </Camera>
+        );
+    }
+
+    _takePicture = () => {
+        this.refs.cam.capture(function (err, data) {
+            console.log(err, data);
+        });
+    }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+var styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "transparent",
+    },
+    buttonBar: {
+        flexDirection: "row",
+        position: "absolute",
+        bottom: 25,
+        right: 0,
+        left: 0,
+        justifyContent: "center"
+    },
+    button: {
+        padding: 10,
+        backgroundColor: "#FFFFFF",
+        borderWidth: 1,
+        borderColor: "#FFFFFF",
+        margin: 5
+    },
+    buttonText: {
+        color: "#000"
+    }
 });
