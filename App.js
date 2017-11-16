@@ -29,9 +29,9 @@ export default class App extends Component {
             return (
                 <Camera ref="cam" style={styles.container} onBarCodeRead={this._readBarCode}>
                     <View style={styles.buttonBar}>
-                        <TouchableHighlight style={styles.button} onPress={this._takePicture}>
+                       {/*  <TouchableHighlight style={styles.button} onPress={this._takePicture}>
                             <Text style={styles.buttonText}>Take</Text>
-                        </TouchableHighlight>
+                        </TouchableHighlight> */}
                     </View>
                 </Camera>
             );
