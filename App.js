@@ -11,7 +11,8 @@ import {
     Text,
     View,
     TextInput,
-    TouchableHighlight
+    TouchableHighlight,
+    AlertIOS
 } from 'react-native';
 
 export default class App extends Component {
@@ -19,22 +20,27 @@ export default class App extends Component {
         super(props);
 
         this.state = {
-        }
+            showCamera: true
+        };
     }
 
     render() {
-        return (
-            <Camera
-                ref="cam"
-                style={styles.container}
-                >
-                <View style={styles.buttonBar}>
-                    <TouchableHighlight style={styles.button} onPress={this._takePicture}>
-                        <Text style={styles.buttonText}>Take</Text>
-                    </TouchableHighlight>
-                </View>
-            </Camera>
-        );
+        if (this.state.showCamera) {
+            return (
+                <Camera ref="cam" style={styles.container} onBarCodeRead={this._readBarCode}>
+                    <View style={styles.buttonBar}>
+                        <TouchableHighlight style={styles.button} onPress={this._takePicture}>
+                            <Text style={styles.buttonText}>Take</Text>
+                        </TouchableHighlight>
+                    </View>
+                </Camera>
+            );
+        } else {
+            return (
+                <View></View>
+            )
+        }
+       
     }
 
     _takePicture = () => {
@@ -42,9 +48,17 @@ export default class App extends Component {
             console.log(err, data);
         });
     }
+
+    _readBarCode = (e) => {
+        this.setState({ showCamera: false });
+        AlertIOS.alert(
+            "Barcode Found!",
+            "Type: " + e.type + "\nData: " + e.data
+        )
+    }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: "center",
