@@ -51,10 +51,26 @@ export default class App extends Component {
 
     _readBarCode = (e) => {
         this.setState({ showCamera: false });
+
+        const user = this.state.user || 1;
+        const url = `http://172.46.3.120:8000/api/v1/users/${user}/gifts/`;
+
         AlertIOS.alert(
             "Barcode Found!",
             "Type: " + e.type + "\nData: " + e.data
-        )
+        );
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                type: e.type,
+                number: e.data
+            })
+        }).catch(e => console.log(e))
     }
 }
 
