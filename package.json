@@ -1,9 +1,11 @@
 {
 	"name": "reindeer_phone",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"private": true,
+	"license": "UNLICENSED",
 	"scripts": {
 		"start": "node node_modules/react-native/local-cli/cli.js start",
+		"lint": "eslint /src",
 		"test": "jest"
 	},
 	"dependencies": {
@@ -15,6 +17,9 @@
 	"devDependencies": {
 		"babel-jest": "21.2.0",
 		"babel-preset-react-native": "4.0.0",
+		"eslint": "^4.12.0",
+		"eslint-config-airbnb": "^16.1.0",
+		"eslint-plugin-react": "^7.5.1",
 		"jest": "21.2.1",
 		"react-test-renderer": "16.0.0"
 	},
