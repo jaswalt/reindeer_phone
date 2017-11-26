@@ -23,7 +23,7 @@ export default class App extends Component {
             showCamera: true
         };
     }
-
+    
     render() {
         if (this.state.showCamera) {
             return (
