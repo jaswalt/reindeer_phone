@@ -40,14 +40,14 @@ export default class App extends Component {
                 <View></View>
             )
         }
-       
+
     }
 
     _takePicture = () => {
         this.refs.cam.capture(function (err, data) {
             console.log(err, data);
         });
-    }
+    };
 
     _readBarCode = (e) => {
         this.setState({ showCamera: false });
