@@ -1,15 +1,18 @@
 module.exports = {
     "extends": [
-        "airbnb",
+        "airbnb-base",
     ],
     "env": {
         "browser": true,
         "mocha": true,
-        "es6": true
+        "es6": true,
     },
     parserOptions: {
         "ecmaVersion": 6,
-        "sourceType": "module"
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
     },
     "rules": {
         "indent": ["error", 4, { "SwitchCase": 1 }],
