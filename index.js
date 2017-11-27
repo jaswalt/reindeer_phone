@@ -1,4 +1,4 @@
 import { AppRegistry } from 'react-native';
-import App from './src/screens/Capture';
+import App from './src/App';
 
 AppRegistry.registerComponent('reindeer_phone', () => App);
