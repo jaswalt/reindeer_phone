@@ -12,8 +12,10 @@ import {
     View,
     TextInput,
     TouchableHighlight,
-    AlertIOS
+    AlertIOS,
+    AsyncStorage
 } from 'react-native';
+import jwtDecode from 'jwt-decode';
 
 export default class Capture extends Component {
     constructor(props) {
@@ -49,28 +51,29 @@ export default class Capture extends Component {
         });
     };
 
-    _readBarCode = (e) => {
+    _readBarCode = async (e) => {
         this.setState({ showCamera: false });
 
-        const user = this.state.user || 1;
-        const url = `http://172.46.3.120:8000/api/v1/users/${user}/gifts/`;
+        try {
+            const token = await AsyncStorage.getItem("@Reindeer:token");
+            const profile = jwtDecode(token);
+            const url = `http://192.168.0.16:8000/api/v1/users/${profile.user_id}/gifts/`;
 
-        AlertIOS.alert(
-            "Barcode Found!",
-            "Type: " + e.type + "\nData: " + e.data
-        );
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: JSON.stringify({
-                type: e.type,
-                number: e.data
-            })
-        }).catch(e => console.log(e))
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    "Authorization": "JWT " + token,
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify({
+                    type: e.type,
+                    number: e.data
+                })
+            }).catch(e => console.log(e))
+        } catch (e) {
+            console.log(e)
+        } 
     }
 }
 

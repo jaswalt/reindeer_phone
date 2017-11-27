@@ -9,38 +9,29 @@ import {
     StyleSheet,
     TextInput,
     View,
-    Text
+    ScrollView,
+    Text,
+    Button,
+    AsyncStorage,
+    Alert
 } from 'react-native';
-import * as t from 'tcomb-form-native';
+import { NavigationActions } from 'react-navigation';
 
 const styles = StyleSheet.create({
     container: {
-        justifyContent: 'center',
-        marginTop: 50,
-        padding: 20,
-        backgroundColor: '#ffffff',
+        flex: 1,
+        //justifyContent: 'center',
+        alignItems: 'center',
     },
-    title: {
-        fontSize: 30,
-        alignSelf: 'center',
-        marginBottom: 30,
-    },
-    buttonText: {
-        fontSize: 18,
-        color: 'white',
-        alignSelf: 'center',
-    },
-    button: {
-        height: 36,
-        backgroundColor: '#48BBEC',
-        borderColor: '#48BBEC',
-        borderWidth: 1,
-        borderRadius: 8,
-        marginBottom: 10,
-        alignSelf: 'stretch',
-        justifyContent: 'center',
+    textField: {
+        height: 70,
     },
 });
+
+const navigateAction = NavigationActions.navigate({
+    routeName: 'Capture',
+    params: {},
+})
 
 export default class Login extends Component {
     constructor(props) {
@@ -62,8 +53,8 @@ export default class Login extends Component {
                     autoCapitalize="none"
                     autoCorrect={false}
                     autoFocus={true}
-                    value={this.state.style}
-                    username={styles.textField}
+                    value={this.state.username}
+                    style={styles.textField}
                     onChangeText={username => this.setState({ username })}
                 />
                 <Text>Password:</Text>
@@ -73,11 +64,45 @@ export default class Login extends Component {
                     autoCapitalize="none"
                     secureTextEntry={true}
                     autoCorrect={false}
-                    value={this.state.passwore}
+                    value={this.state.password}
                     onChangeText={password => this.setState({ password })}
+                />
+                <Button
+                    title="Login"
+                    color="#841584"
+                    onPress={this._transmitForm}
+                    accessibilityLabel="Learn more about this purple button"
                 />
             </View>
         );
+    }
+
+    _transmitForm = async(e) => {
+        e.preventDefault();
+
+        try {
+            let resp = await fetch('http://192.168.0.16:8000/api-token-auth/', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: this.state.username,
+                    password: this.state.password
+                })
+            });
+
+            resp = await resp.json();
+            if (resp.token) {
+                console.log('setting token: ' + resp.token)
+                await AsyncStorage.setItem("@Reindeer:token", resp.token)
+                this.props.navigation.dispatch(navigateAction)
+            } else {
+                Alert.alert('Wrong Credentials', 'Username or password are invalid, please try again.')
+            }
+        } catch (e) {
+        }
     }
 }
 
