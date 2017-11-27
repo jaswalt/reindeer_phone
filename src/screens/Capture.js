@@ -43,9 +43,11 @@ export default class Capture extends Component {
             );
         } else {
             return (
-                <ImageBackground source={require('./gift.jpeg')} style={styles.container} onLayout={this._goBack}>
-                    
-                </ImageBackground>
+                <ImageBackground
+                    source={require('../../public/img/gift.jpeg')}
+                    style={styles.container}
+                    onLayout={this._goBack}
+                />
             )
         }
 
@@ -81,7 +83,7 @@ export default class Capture extends Component {
     _goBack = () => {
         Alert.alert(
             'Sweet!',
-            'That gift has been received and is being processed',
+            'That item will be added to your gift list soon',
             [
                 { text: 'Capture Another', onPress: () => this.setState({showCamera: true}) },
                 { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
