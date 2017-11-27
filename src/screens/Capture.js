@@ -13,9 +13,13 @@ import {
     TextInput,
     TouchableHighlight,
     AlertIOS,
-    AsyncStorage
+    AsyncStorage,
+    Vibration,
+    ImageBackground,
+    Alert
 } from 'react-native';
 import jwtDecode from 'jwt-decode';
+
 
 export default class Capture extends Component {
     constructor(props) {
@@ -39,27 +43,24 @@ export default class Capture extends Component {
             );
         } else {
             return (
-                <View></View>
+                <ImageBackground source={require('./gift.jpeg')} style={styles.container} onLayout={this._goBack}>
+                    
+                </ImageBackground>
             )
         }
 
     }
 
-    _takePicture = () => {
-        this.refs.cam.capture(function (err, data) {
-            console.log(err, data);
-        });
-    };
-
     _readBarCode = async (e) => {
-        this.setState({ showCamera: false });
-
+        this.setState({
+            showCamera: false
+        });
         try {
             const token = await AsyncStorage.getItem("@Reindeer:token");
             const profile = jwtDecode(token);
             const url = `http://192.168.0.16:8000/api/v1/users/${profile.user_id}/gifts/`;
 
-            fetch(url, {
+            await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -70,10 +71,22 @@ export default class Capture extends Component {
                     type: e.type,
                     number: e.data
                 })
-            }).catch(e => console.log(e))
+            });
+            Vibration.vibrate()
         } catch (e) {
             console.log(e)
         } 
+    }
+
+    _goBack = () => {
+        Alert.alert(
+            'Sweet!',
+            'That gift has been received and is being processed',
+            [
+                { text: 'Capture Another', onPress: () => this.setState({showCamera: true}) },
+                { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+            ],
+        )
     }
 }
 
