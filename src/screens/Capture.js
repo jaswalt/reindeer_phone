@@ -34,11 +34,7 @@ export default class Capture extends Component {
         if (this.state.showCamera) {
             return (
                 <Camera ref="cam" style={styles.container} onBarCodeRead={this._readBarCode}>
-                    <View style={styles.buttonBar}>
-                        {/*  <TouchableHighlight style={styles.button} onPress={this._takePicture}>
-                            <Text style={styles.buttonText}>Take</Text>
-                        </TouchableHighlight> */}
-                    </View>
+                    <View style={styles.buttonBar} />
                 </Camera>
             );
         } else {
@@ -60,7 +56,7 @@ export default class Capture extends Component {
         try {
             const token = await AsyncStorage.getItem("@Reindeer:token");
             const profile = jwtDecode(token);
-            const url = `http://192.168.0.16:8000/api/v1/users/${profile.user_id}/gifts/`;
+            const url = `https://kaddo.co/api/v1/users/${profile.user_id}/gifts/`;
 
             await fetch(url, {
                 method: 'POST',

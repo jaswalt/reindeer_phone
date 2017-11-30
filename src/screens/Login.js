@@ -13,7 +13,8 @@ import {
     Text,
     Button,
     AsyncStorage,
-    Alert
+    Alert,
+    ImageBackground
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
@@ -22,10 +23,18 @@ const styles = StyleSheet.create({
         flex: 1,
         //justifyContent: 'center',
         alignItems: 'center',
+        paddingTop: 60
     },
     textField: {
-        height: 70,
-    },
+        height: 50,
+        width: 140,
+        marginBottom: 20,
+        backgroundColor: 'white',
+        borderStyle: 'solid',
+        borderColor: 'black',
+        borderWidth: 1,
+        borderRadius: 7,
+    }
 });
 
 const navigateAction = NavigationActions.navigate({
@@ -46,8 +55,7 @@ export default class Login extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <Text>Username:</Text>
+            <ImageBackground style={styles.container} source={require('../../public/img/login.jpeg')}>
                 <TextInput
                     placeholder="Username"
                     autoCapitalize="none"
@@ -57,7 +65,6 @@ export default class Login extends Component {
                     style={styles.textField}
                     onChangeText={username => this.setState({ username })}
                 />
-                <Text>Password:</Text>
                 <TextInput
                     style={styles.textField}
                     placeholder="Password"
@@ -69,19 +76,19 @@ export default class Login extends Component {
                 />
                 <Button
                     title="Login"
-                    color="#841584"
+                    color="blue"
                     onPress={this._transmitForm}
                     accessibilityLabel="Learn more about this purple button"
                 />
-            </View>
+            </ImageBackground>
         );
     }
 
-    _transmitForm = async(e) => {
+    _transmitForm = async (e) => {
         e.preventDefault();
 
         try {
-            let resp = await fetch('http://192.168.0.16:8000/api-token-auth/', {
+            let resp = await fetch('https://kaddo.co/api-token-auth/', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -94,14 +101,15 @@ export default class Login extends Component {
             });
 
             resp = await resp.json();
+
             if (resp.token) {
-                console.log('setting token: ' + resp.token)
-                await AsyncStorage.setItem("@Reindeer:token", resp.token)
+                await AsyncStorage.setItem("@Reindeer:token", resp.token);
                 this.props.navigation.dispatch(navigateAction)
             } else {
                 Alert.alert('Wrong Credentials', 'Username or password are invalid, please try again.')
             }
         } catch (e) {
+            Alert.alert('Error', 'Uhoh, something went wrong!')
         }
     }
 }
